@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Photo Studio</title>
+  <title>PixelForge AI</title>
   <style>
     :root {
-      --bg1: #0b1020;
-      --bg2: #171d35;
-      --card: rgba(15, 23, 42, 0.85);
-      --card2: rgba(17, 24, 39, 0.9);
-      --primary: #7c3aed;
-      --primary-2: #22c55e;
-      --primary-3: #06b6d4;
-      --text: #e5e7eb;
-      --muted: #a8b0c2;
-      --border: rgba(255,255,255,0.08);
-      --white: #ffffff;
+      --bg: #09111f;
+      --bg-2: #111c2d;
+      --panel: rgba(15, 23, 42, 0.78);
+      --panel-2: rgba(17, 24, 39, 0.9);
+      --line: rgba(255,255,255,0.08);
+      --text: #edf2ff;
+      --muted: #97a7c4;
+      --primary: #8b5cf6;
+      --primary-2: #3b82f6;
+      --primary-3: #22c55e;
+      --orange: #f59e0b;
       --danger: #ef4444;
-      --warning: #f59e0b;
       --success: #10b981;
+      --shadow: 0 28px 70px rgba(0,0,0,0.42);
     }
 
     * { box-sizing: border-box; }
@@ -27,42 +27,46 @@
     html, body {
       margin: 0;
       min-height: 100%;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      background:
+        radial-gradient(circle at top left, rgba(139,92,246,0.35), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(59,130,246,0.25), transparent 30%),
+        linear-gradient(135deg, var(--bg), var(--bg-2));
       color: var(--text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
       min-height: 100vh;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      padding: 22px;
     }
 
-    .app {
-      width: min(1200px, calc(100% - 32px));
-      min-height: 740px;
-      border-radius: 28px;
+    .app-shell {
+      width: min(1200px, 100%);
+      min-height: 760px;
+      border-radius: 30px;
       overflow: hidden;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
-      border: 1px solid var(--border);
-      background: rgba(10, 14, 28, 0.85);
-      backdrop-filter: blur(14px);
+      background: rgba(8, 13, 24, 0.8);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
     }
 
-    .login-screen {
+    .auth-layout {
       display: grid;
-      grid-template-columns: 1.1fr 1fr;
-      min-height: 740px;
+      grid-template-columns: 1.08fr 0.92fr;
+      min-height: 760px;
     }
 
     .hero {
       position: relative;
-      background: linear-gradient(135deg, rgba(124,58,237,0.95), rgba(59,130,246,0.9), rgba(6,182,212,0.8));
       padding: 42px 38px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      background: linear-gradient(135deg, rgba(139,92,246,0.9), rgba(59,130,246,0.8), rgba(36, 197, 255, 0.8));
       overflow: hidden;
     }
 
@@ -70,244 +74,247 @@
     .hero::after {
       content: "";
       position: absolute;
-      width: 260px;
-      height: 260px;
       border-radius: 50%;
       background: rgba(255,255,255,0.08);
-      filter: blur(4px);
+      filter: blur(10px);
     }
 
-    .hero::before { top: -80px; right: -60px; }
-    .hero::after { bottom: -90px; left: -70px; }
+    .hero::before {
+      width: 290px;
+      height: 290px;
+      top: -90px;
+      right: -50px;
+    }
+
+    .hero::after {
+      width: 240px;
+      height: 240px;
+      bottom: -90px;
+      left: -50px;
+    }
 
     .hero-content {
       position: relative;
       z-index: 1;
     }
 
-    .badge {
+    .chip {
       display: inline-flex;
+      align-items: center;
+      gap: 8px;
       padding: 8px 14px;
       border-radius: 999px;
       background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(8px);
       font-size: 12px;
       letter-spacing: 0.5px;
       margin-bottom: 18px;
-      backdrop-filter: blur(8px);
     }
 
     .hero h1 {
-      font-size: clamp(2.5rem, 4vw, 4rem);
+      font-size: clamp(2.5rem, 4vw, 4.2rem);
       margin: 0 0 18px;
-      line-height: 1.1;
-      font-weight: 800;
+      line-height: 1.05;
+      font-weight: 900;
+      letter-spacing: -1px;
     }
 
     .hero p {
-      margin: 0;
-      font-size: 1.04rem;
+      max-width: 450px;
+      font-size: 1rem;
+      line-height: 1.9;
       color: rgba(255,255,255,0.9);
-      line-height: 1.8;
-      max-width: 420px;
+      margin: 0;
     }
 
-    .hero-stats {
+    .stats {
       margin-top: 30px;
       display: flex;
-      gap: 18px;
+      gap: 16px;
       flex-wrap: wrap;
     }
 
     .stat {
-      min-width: 115px;
+      min-width: 120px;
+      padding: 16px 18px;
+      border-radius: 18px;
       background: rgba(17,24,39,0.18);
       border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 18px;
-      padding: 16px 18px;
     }
 
     .stat strong {
       display: block;
-      font-size: 1.4rem;
+      font-size: 1.5rem;
+      margin-bottom: 4px;
     }
 
     .stat span {
-      font-size: 0.75rem;
       color: rgba(255,255,255,0.8);
+      font-size: 0.72rem;
     }
 
     .login-panel {
-      background: rgba(7, 11, 20, 0.88);
+      background: rgba(9, 15, 26, 0.92);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       padding: 30px;
     }
 
     .login-box {
       width: min(430px, 100%);
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid var(--border);
-      border-radius: 22px;
       padding: 30px 24px;
-      box-shadow: 0 20px 45px rgba(0,0,0,0.2);
+      border-radius: 24px;
+      background: rgba(17,24,39,0.84);
+      border: 1px solid var(--line);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.18);
     }
 
-    .login-header {
-      margin-bottom: 25px;
+    .section-title {
+      margin-bottom: 22px;
     }
 
-    .login-header h2 {
+    .section-title h2 {
       margin: 0;
       font-size: 2rem;
       font-weight: 800;
     }
 
-    .login-header p {
+    .section-title p {
       margin: 8px 0 0;
       color: var(--muted);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
     }
 
     .field {
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
     .field label {
       display: block;
-      font-size: 0.9rem;
-      color: #d6deef;
       margin-bottom: 8px;
+      font-size: 0.9rem;
       font-weight: 600;
+      color: #dfe8ff;
     }
 
     .field input {
       width: 100%;
-      height: 52px;
+      height: 54px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(17, 24, 39, 0.9);
-      color: var(--white);
-      padding: 0 16px;
+      background: rgba(15,23,42,0.87);
+      border: 1px solid var(--line);
+      color: var(--text);
       font-size: 1rem;
+      padding: 0 16px;
       outline: none;
-      transition: 0.2s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .field input:focus {
-      border-color: rgba(124, 58, 237, 0.8);
-      box-shadow: 0 0 0 3px rgba(124,58,237,0.18);
+      border-color: rgba(139, 92, 246, 0.9);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.14);
     }
 
-    .field input::placeholder { color: #7c89a9; }
+    .field input::placeholder { color: #6e7ea7; }
 
     .row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin: 10px 0 20px;
+      margin: 8px 0 22px;
       color: var(--muted);
-      font-size: 0.88rem;
+      font-size: 0.87rem;
     }
 
-    .checkbox {
+    .check {
       display: inline-flex;
       align-items: center;
       gap: 8px;
     }
 
-    .checkbox input {
+    .check input {
       accent-color: var(--primary);
       width: 16px;
       height: 16px;
     }
 
-    .row a {
-      color: #b7c4ff;
+    .row a,
+    .link {
+      color: #bfd0ff;
       text-decoration: none;
+      font-weight: 600;
+    }
+
+    .primary-btn,
+    .ghost-btn,
+    .social-btn {
+      border: none;
+      outline: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      font-weight: 700;
     }
 
     .primary-btn {
       width: 100%;
-      height: 52px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--primary), #4f46e5);
-      color: var(--white);
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 14px 30px rgba(124,58,237,0.36);
+      height: 54px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      box-shadow: 0 18px 35px rgba(124, 58, 237, 0.32);
     }
 
-    .primary-btn:hover {
+    .primary-btn:hover,
+    .ghost-btn:hover,
+    .social-btn:hover {
       transform: translateY(-1px);
     }
 
-    .secondary-btn {
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.02);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 10px 12px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .or {
+    .divider {
       display: flex;
       align-items: center;
       gap: 12px;
       color: var(--muted);
-      margin: 18px 0;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
+      margin: 20px 0;
     }
 
-    .or::before, .or::after {
+    .divider::before,
+    .divider::after {
       content: "";
       flex: 1;
       height: 1px;
-      background: rgba(255,255,255,0.08);
+      background: var(--line);
     }
 
-    .social-row {
+    .socials {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0,1fr));
       gap: 10px;
     }
 
     .social-btn {
-      width: 100%;
-      height: 48px;
-      border-radius: 12px;
+      height: 46px;
       background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--white);
-      cursor: pointer;
-      font-weight: 600;
+      border: 1px solid var(--line);
+      color: var(--text);
     }
 
-    .info-text {
+    .bottom-link {
       margin-top: 22px;
       text-align: center;
       color: var(--muted);
       font-size: 0.9rem;
     }
 
-    .info-text a {
-      color: #b6c6ff;
-      text-decoration: none;
-      font-weight: 700;
-    }
-
     .dashboard {
       display: none;
-      min-height: 740px;
-      background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(17,24,39,0.92));
-      padding: 24px;
+      min-height: 760px;
+      padding: 22px;
+      background: rgba(8,13,24,0.9);
     }
 
     .dashboard.show { display: block; }
@@ -317,11 +324,11 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 22px;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid var(--border);
+      padding: 18px 20px;
       border-radius: 18px;
-      padding: 14px 18px;
+      background: rgba(15,23,42,0.86);
+      border: 1px solid var(--line);
+      margin-bottom: 18px;
     }
 
     .brand {
@@ -329,21 +336,19 @@
       align-items: center;
       gap: 12px;
       font-weight: 800;
-      font-size: 1.1rem;
     }
 
     .brand-mark {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
       display: grid;
       place-items: center;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-3));
-      box-shadow: 0 8px 18px rgba(124,58,237,0.38);
-      font-size: 1.1rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      box-shadow: 0 14px 24px rgba(124,58,237,0.38);
     }
 
-    .user-box {
+    .user-area {
       display: flex;
       align-items: center;
       gap: 12px;
@@ -355,55 +360,62 @@
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary-2), var(--primary-3));
+      background: linear-gradient(135deg, var(--primary-3), var(--primary-2));
+      color: white;
       display: grid;
       place-items: center;
-      color: white;
       font-weight: 800;
     }
 
-    .workspace {
+    .ghost-btn {
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      border: 1px solid var(--line);
+      height: 42px;
+      padding: 0 16px;
+    }
+
+    .layout {
       display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 22px;
+      grid-template-columns: 350px 1fr;
+      gap: 20px;
     }
 
     .panel {
-      background: rgba(15,23,42,0.88);
-      border: 1px solid var(--border);
-      border-radius: 22px;
+      background: rgba(15,23,42,0.82);
+      border: 1px solid var(--line);
+      border-radius: 24px;
       padding: 18px;
       box-shadow: 0 18px 40px rgba(0,0,0,0.12);
     }
 
     .panel h3 {
       margin: 0 0 14px;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
+      font-weight: 800;
     }
 
     .upload-box {
-      border: 1.5px dashed rgba(255,255,255,0.18);
-      border-radius: 18px;
-      padding: 20px 16px;
       text-align: center;
+      padding: 18px 14px;
+      border-radius: 18px;
+      border: 1.5px dashed rgba(255,255,255,0.18);
       background: rgba(255,255,255,0.02);
       margin-bottom: 16px;
     }
 
-    .upload-box input[type="file"] {
-      display: none;
-    }
-
-    .upload-btn {
+    .upload-box label {
       display: inline-block;
+      margin-top: 12px;
+      background: linear-gradient(135deg, var(--primary-3), var(--primary-2));
+      color: white;
       padding: 12px 18px;
       border-radius: 12px;
-      background: linear-gradient(135deg, var(--primary-2), var(--primary-3));
-      color: white;
       font-weight: 700;
       cursor: pointer;
-      margin-top: 8px;
     }
+
+    .upload-box input { display: none; }
 
     .field-block {
       margin-bottom: 16px;
@@ -411,98 +423,93 @@
 
     .field-block label {
       display: block;
-      font-size: 0.9rem;
-      color: #dfe8ff;
       margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: #e0e7ff;
+      font-weight: 600;
+    }
+
+    .field-block textarea,
+    .field-block select,
+    .field-block input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: rgba(15,23,42,0.88);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 12px 14px;
+      outline: none;
+      font-size: 0.97rem;
     }
 
     .field-block textarea {
-      width: 100%;
       min-height: 110px;
-      border-radius: 14px;
-      background: rgba(17,24,39,0.9);
-      color: var(--white);
-      border: 1px solid rgba(255,255,255,0.08);
       resize: vertical;
-      padding: 12px 14px;
-      outline: none;
     }
 
     .field-block textarea:focus,
     .field-block select:focus,
     .field-block input:focus {
-      border-color: rgba(124,58,237,0.7);
-      box-shadow: 0 0 0 3px rgba(124,58,237,0.14);
+      border-color: rgba(139,92,246,0.8);
+      box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
     }
 
-    .field-block select,
-    .field-block input {
-      width: 100%;
-      border-radius: 12px;
-      background: rgba(17,24,39,0.9);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--white);
-      padding: 12px 14px;
-      outline: none;
-    }
-
-    .mini-grid {
+    .double-row {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0,1fr));
       gap: 12px;
     }
 
-    .action-row {
+    .actions {
       display: flex;
       gap: 10px;
-      margin-top: 14px;
+      margin-top: 10px;
     }
 
-    .action-row .primary-btn,
-    .action-row .secondary-btn {
+    .actions .primary-btn,
+    .actions .ghost-btn {
       flex: 1;
       height: 46px;
+    }
+
+    .status {
+      min-height: 26px;
+      margin-top: 16px;
+      font-size: 0.9rem;
+      color: var(--success);
+      font-weight: 600;
     }
 
     .preview-panel {
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
 
     .preview-box {
-      height: 500px;
-      overflow: hidden;
-      border-radius: 22px;
-      background: linear-gradient(135deg, rgba(17,24,39,0.86), rgba(31,41,55,0.86));
-      border: 1px solid var(--border);
+      position: relative;
       display: grid;
       place-items: center;
-      position: relative;
-    }
-
-    .preview-box img {
-      display: none;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: 16px;
-      box-shadow: 0 28px 60px rgba(0,0,0,0.28);
-      filter: brightness(1) contrast(1) saturate(1) sepia(0) blur(0px) grayscale(0);
-    }
-
-    .preview-box canvas {
-      display: block;
-      max-width: 100%;
-      max-height: 100%;
-      border-radius: 16px;
-      box-shadow: 0 28px 60px rgba(0,0,0,0.28);
+      min-height: 500px;
+      overflow: hidden;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(28,39,61,0.9));
+      border: 1px solid var(--line);
     }
 
     .empty-state {
-      color: var(--muted);
       text-align: center;
-      padding: 20px;
+      color: var(--muted);
+      padding: 24px;
+      line-height: 2;
+    }
+
+    .preview-box canvas {
+      display: none;
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 16px;
+      box-shadow: 0 26px 60px rgba(0,0,0,0.28);
     }
 
     .toolbar {
@@ -512,8 +519,8 @@
     }
 
     .control {
-      background: rgba(17,24,39,0.8);
-      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      border: 1px solid var(--line);
       border-radius: 14px;
       padding: 12px 10px;
     }
@@ -521,7 +528,7 @@
     .control label {
       display: flex;
       justify-content: space-between;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: var(--muted);
       margin-bottom: 6px;
     }
@@ -531,54 +538,46 @@
       accent-color: var(--primary);
     }
 
-    .status {
-      margin-top: 16px;
-      min-height: 24px;
-      color: var(--success);
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    @media (max-width: 980px) {
-      .login-screen { grid-template-columns: 1fr; }
-      .workspace { grid-template-columns: 1fr; }
+    @media (max-width: 1000px) {
+      .auth-layout,
+      .layout {
+        grid-template-columns: 1fr;
+      }
       .toolbar { grid-template-columns: repeat(2, minmax(0,1fr)); }
     }
 
     @media (max-width: 560px) {
-      .app { width: min(100% - 18px, 1200px); }
-      .login-panel, .hero { padding: 22px 16px; }
+      body { padding: 14px; }
+      .hero, .login-panel { padding: 24px 16px; }
       .topbar { flex-direction: column; align-items: flex-start; }
-      .mini-grid { grid-template-columns: 1fr; }
-      .toolbar { grid-template-columns: 1fr; }
-      .preview-box { height: 360px; }
+      .double-row, .socials, .toolbar { grid-template-columns: 1fr; }
+      .preview-box { min-height: 350px; }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <section class="login-screen" id="loginScreen">
+  <div class="app-shell">
+    <section class="auth-layout" id="authLayout">
       <div class="hero">
         <div class="hero-content">
-          <div class="badge">AI Photo Studio</div>
-          <h1>أنشئ صورك<br>بذكاء اصطناعي</h1>
+          <div class="chip">PixelForge AI</div>
+          <h1>صنع صورك<br>بذكاء اصطناعي</h1>
           <p>
-            قم بتسجيل الدخول واستخدم أدوات تحرير الصور الذكية، أضف التأثيرات،
-            غير الألوان، وحافظ على مشروعك داخل المتصفح بطريقة سريعة وسهلة.
+            حرّر الصور بسرعة، طبق التأثيرات الذكية، وحفظ كل ما تحتاجه في تجربة احترافية سهلة الاستخدام داخل المتصفح.
           </p>
 
-          <div class="hero-stats">
-            <div class="stat">
-              <strong>2.4K</strong>
-              <span>صور تم تحريرها</span>
-            </div>
+          <div class="stats">
             <div class="stat">
               <strong>4.8</strong>
-              <span>تقييم المستخدمين</span>
+              <span>تقييم</span>
+            </div>
+            <div class="stat">
+              <strong>2.4K</strong>
+              <span>صور</span>
             </div>
             <div class="stat">
               <strong>AI</strong>
-              <span>مؤثرات ذكية</span>
+              <span>تأثيرات</span>
             </div>
           </div>
         </div>
@@ -586,9 +585,9 @@
 
       <div class="login-panel">
         <div class="login-box">
-          <div class="login-header">
+          <div class="section-title">
             <h2>تسجيل الدخول</h2>
-            <p>أدخل بيانات حسابك للوصول إلى لوحة التحرير</p>
+            <p>ادخل بياناتك للوصول إلى لوحة التحرير</p>
           </div>
 
           <form id="loginForm">
@@ -603,21 +602,21 @@
             </div>
 
             <div class="row">
-              <label class="checkbox"><input type="checkbox" id="rememberMe" /> تذكرني</label>
+              <label class="check"><input type="checkbox" id="rememberMe" /> تذكرني</label>
               <a href="#">هل نسيت كلمة المرور؟</a>
             </div>
 
             <button type="submit" class="primary-btn">دخول</button>
 
-            <div class="or">أو</div>
+            <div class="divider">أو</div>
 
-            <div class="social-row">
+            <div class="socials">
               <button type="button" class="social-btn">Google</button>
               <button type="button" class="social-btn">GitHub</button>
             </div>
 
-            <div class="info-text">
-              ليس لديك حساب؟ <a href="#">إنشاء حساب جديد</a>
+            <div class="bottom-link">
+              ليس لديك حساب؟ <a href="#" class="link">إنشاء حساب جديد</a>
             </div>
           </form>
         </div>
@@ -628,31 +627,32 @@
       <div class="topbar">
         <div class="brand">
           <div class="brand-mark">✦</div>
-          AI Photo Studio
+          PixelForge AI
         </div>
 
-        <div class="user-box">
+        <div class="user-area">
           <div class="avatar" id="userInitial">U</div>
-          <span id="userName">المستخدم</span>
-          <button class="secondary-btn" id="logoutBtn">تسجيل الخروج</button>
+          <span id="userName">مستخدم</span>
+          <button class="ghost-btn" id="logoutBtn">تسجيل الخروج</button>
         </div>
       </div>
 
-      <div class="workspace">
+      <div class="layout">
         <aside class="panel">
-          <h3>تحميل الصورة</h3>
+          <h3>رفع الصورة</h3>
+
           <div class="upload-box">
-            <div>اختر الصورة من جهازك</div>
-            <label class="upload-btn" for="imageUpload">رفع الصورة</label>
+            <div>اختر ملف الصورة</div>
+            <label for="imageUpload">رفع الصورة</label>
             <input id="imageUpload" type="file" accept="image/*" />
           </div>
 
           <div class="field-block">
-            <label for="promtText">وصف تحرير الذكاء الاصطناعي</label>
-            <textarea id="promtText" placeholder="اكتب وصفك: أضف تأثير سينمائي، أضف ألوان متوهجة، زد التفاصيل، اجعل الصورة تبدو احترافية...">حسن الصورة، أضف إضاءة زاهية، مظهر احترافي ساطع</textarea>
+            <label for="promptText">وصف التحرير الذكي</label>
+            <textarea id="promptText" placeholder="مثال: أضف ألوان زاهية، صور سينمائية احترافية، إضاءة جميلة">حسن الصورة، اجعلها احترافية ومنعشة، أضف إضاءة رائعة</textarea>
           </div>
 
-          <div class="mini-grid">
+          <div class="double-row">
             <div class="field-block">
               <label for="effectPreset">تأثير جاهز</label>
               <select id="effectPreset">
@@ -667,20 +667,20 @@
             <div class="field-block">
               <label for="resolution">الدقة</label>
               <select id="resolution">
-                <option value="full">الأصلية</option>
+                <option value="original">الأصلية</option>
                 <option value="hd">HD</option>
                 <option value="4k">4K</option>
               </select>
             </div>
           </div>
 
-          <div class="action-row">
+          <div class="actions">
             <button class="primary-btn" id="applyAiBtn">تطبيق التأثير</button>
-            <button class="secondary-btn" id="resetBtn">إعادة</button>
+            <button class="ghost-btn" id="resetBtn">إعادة</button>
           </div>
 
-          <div class="action-row">
-            <button class="secondary-btn" id="downloadBtn" style="background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.35); color: #baf6dd;">حفظ الصورة</button>
+          <div class="actions">
+            <button class="ghost-btn" id="downloadBtn" style="background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.3); color: #b9f5d8;">حفظ الصورة</button>
           </div>
 
           <div id="status" class="status"></div>
@@ -690,9 +690,9 @@
           <div class="panel preview-box" id="previewBox">
             <div id="emptyState" class="empty-state">
               لا توجد صورة محمّلة بعد.<br>
-              أضف صورة لبدء التحرير.
+              ارفع صورة لبدء التحرير.
             </div>
-            <canvas id="canvas" width="900" height="600" style="display:none;"></canvas>
+            <canvas id="canvas" width="900" height="600"></canvas>
           </div>
 
           <div class="panel">
@@ -730,8 +730,8 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'aiPhotoStudioUser';
-    const loginScreen = document.getElementById('loginScreen');
+    const STORAGE_KEY = 'pixelForgeUser';
+    const authLayout = document.getElementById('authLayout');
     const dashboard = document.getElementById('dashboard');
     const loginForm = document.getElementById('loginForm');
     const userName = document.getElementById('userName');
@@ -740,9 +740,8 @@
 
     const imageUpload = document.getElementById('imageUpload');
     const canvas = document.getElementById('canvas');
-    const previewBox = document.getElementById('previewBox');
     const emptyState = document.getElementById('emptyState');
-    const promtText = document.getElementById('promtText');
+    const promptText = document.getElementById('promptText');
     const applyAiBtn = document.getElementById('applyAiBtn');
     const resetBtn = document.getElementById('resetBtn');
     const downloadBtn = document.getElementById('downloadBtn');
@@ -750,26 +749,11 @@
     const logoutBtn = document.getElementById('logoutBtn');
 
     let originalImage = null;
-    let imageLoaded = false;
-    let currentFilters = {
-      brightness: 100,
-      contrast: 100,
-      saturation: 100,
-      sepia: 0,
-      blur: 0
-    };
+    let imageReady = false;
 
-    function setStatus(text, isSuccess = true) {
+    function setStatus(text, ok = true) {
       status.textContent = text;
-      status.style.color = isSuccess ? '#9ef0c1' : '#f7a6a6';
-    }
-
-    function getSavedUser() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY));
-      } catch {
-        return null;
-      }
+      status.style.color = ok ? '#9ef0c1' : '#f7b4b4';
     }
 
     function saveUser(user) {
@@ -780,21 +764,29 @@
       localStorage.removeItem(STORAGE_KEY);
     }
 
+    function getSavedUser() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY));
+      } catch {
+        return null;
+      }
+    }
+
     function showDashboard(user) {
-      const email = user?.email || 'المستخدم';
-      const initial = email.charAt(0).toUpperCase();
-      userName.textContent = email.split('@')[0] || 'المستخدم';
-      userInitial.textContent = initial;
-      loginScreen.style.display = 'none';
+      const email = user?.email || 'مستخدم';
+      const name = email.split('@')[0] || 'مستخدم';
+      userName.textContent = name;
+      userInitial.textContent = name.charAt(0).toUpperCase();
+      authLayout.style.display = 'none';
       dashboard.classList.add('show');
     }
 
-    function showLogin() {
+    function showAuth() {
       dashboard.classList.remove('show');
-      loginScreen.style.display = 'grid';
+      authLayout.style.display = 'grid';
     }
 
-    function renderFilters() {
+    function applyFilters() {
       const brightness = document.getElementById('brightness');
       const contrast = document.getElementById('contrast');
       const saturation = document.getElementById('saturation');
@@ -807,18 +799,11 @@
       document.getElementById('sepiaVal').textContent = sepia.value + '%';
       document.getElementById('blurVal').textContent = blur.value + 'px';
 
-      currentFilters = {
-        brightness: Number(brightness.value),
-        contrast: Number(contrast.value),
-        saturation: Number(saturation.value),
-        sepia: Number(sepia.value),
-        blur: Number(blur.value)
-      };
+      if (!imageReady || !originalImage) return;
 
-      if (!imageLoaded || !originalImage) return;
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.filter = `brightness(${currentFilters.brightness}%) contrast(${currentFilters.contrast}%) saturate(${currentFilters.saturation}%) sepia(${currentFilters.sepia}%) blur(${currentFilters.blur}px)`;
+      ctx.filter = `brightness(${brightness.value}%) contrast(${contrast.value}%) saturate(${saturation.value}%) sepia(${sepia.value}%) blur(${blur.value}px)`;
       ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
       ctx.filter = 'none';
     }
@@ -840,46 +825,50 @@
         controls.sepia.value = 12;
         controls.blur.value = 0;
       }
-
-      if (preset === 'vivid') {
-        controls.brightness.value = 110;
+      else if (preset === 'vivid') {
+        controls.brightness.value = 112;
         controls.contrast.value = 120;
         controls.saturation.value = 150;
         controls.sepia.value = 0;
         controls.blur.value = 0;
       }
-
-      if (preset === 'soft') {
-        controls.brightness.value = 105;
-        controls.contrast.value = 90;
-        controls.saturation.value = 85;
+      else if (preset === 'soft') {
+        controls.brightness.value = 108;
+        controls.contrast.value = 92;
+        controls.saturation.value = 82;
         controls.sepia.value = 8;
         controls.blur.value = 1;
       }
-
-      if (preset === 'mono') {
-        controls.brightness.value = 95;
+      else if (preset === 'mono') {
+        controls.brightness.value = 96;
         controls.contrast.value = 125;
-        controls.saturation.value = 20;
+        controls.saturation.value = 18;
+        controls.sepia.value = 0;
+        controls.blur.value = 0;
+      }
+      else {
+        controls.brightness.value = 100;
+        controls.contrast.value = 100;
+        controls.saturation.value = 100;
         controls.sepia.value = 0;
         controls.blur.value = 0;
       }
 
-      renderFilters();
+      applyFilters();
     }
 
-    function loadImageAndRender(file) {
+    function renderLoadedImage(file) {
       const reader = new FileReader();
       reader.onload = function (e) {
         const img = new Image();
         img.onload = function () {
           originalImage = img;
-          imageLoaded = true;
+          imageReady = true;
           emptyState.style.display = 'none';
           canvas.style.display = 'block';
           canvas.width = img.width;
           canvas.height = img.height;
-          renderFilters();
+          applyFilters();
           setStatus('تم تحميل الصورة بنجاح');
         };
         img.src = e.target.result;
@@ -890,40 +879,34 @@
     imageUpload.addEventListener('change', function (e) {
       const file = e.target.files[0];
       if (!file) return;
-      loadImageAndRender(file);
+      renderLoadedImage(file);
     });
 
-    ['brightness','contrast','saturation','sepia','blur'].forEach((id) => {
-      document.getElementById(id).addEventListener('input', renderFilters);
+    ['brightness', 'contrast', 'saturation', 'sepia', 'blur'].forEach((id) => {
+      document.getElementById(id).addEventListener('input', applyFilters);
     });
 
     effectPreset.addEventListener('change', applyPreset);
 
     applyAiBtn.addEventListener('click', function () {
-      if (!imageLoaded || !originalImage) {
+      if (!imageReady || !originalImage) {
         setStatus('يرجى رفع صورة أولاً', false);
         return;
       }
 
-      const prompt = promtText.value.trim();
-      if (!prompt) {
-        setStatus('اكتب وصف التأثير أولاً', false);
+      const text = promptText.value.toLowerCase();
+      if (!text) {
+        setStatus('اكتب وصف التحرير أولاً', false);
         return;
       }
 
-      const tokens = prompt.toLowerCase();
-      const isCinematic = tokens.includes('سينمائي') || tokens.includes('cinematic');
-      const isVivid = tokens.includes('زاه') || tokens.includes('vivid') || tokens.includes('ساطع');
-      const isSoft = tokens.includes('ناع') || tokens.includes('soft');
-      const isMono = tokens.includes('أبيض') || tokens.includes('black') || tokens.includes('mono');
-
-      if (isCinematic) {
+      if (text.includes('سينمائي') || text.includes('cinematic')) {
         effectPreset.value = 'cinematic';
-      } else if (isVivid) {
+      } else if (text.includes('زاه') || text.includes('vivid') || text.includes('ساطع')) {
         effectPreset.value = 'vivid';
-      } else if (isSoft) {
+      } else if (text.includes('ناع') || text.includes('soft')) {
         effectPreset.value = 'soft';
-      } else if (isMono) {
+      } else if (text.includes('أسود') || text.includes('mono') || text.includes('black')) {
         effectPreset.value = 'mono';
       } else {
         effectPreset.value = 'custom';
@@ -940,19 +923,18 @@
       document.getElementById('sepia').value = 0;
       document.getElementById('blur').value = 0;
       effectPreset.value = 'custom';
-      renderFilters();
-      setStatus('تمت إعادة الضبط إلى الحالة الأساسية');
+      applyFilters();
+      setStatus('تمت إعادة ضبط الصورة إلى الوضع الأساسي');
     });
 
     downloadBtn.addEventListener('click', function () {
-      if (!imageLoaded) {
-        setStatus('لا توجد صورة لحفظها', false);
+      if (!imageReady) {
+        setStatus(' لا توجد صورة لحفظها', false);
         return;
       }
-
       const link = document.createElement('a');
+      link.download = 'pixelforge-edited.png';
       link.href = canvas.toDataURL('image/png');
-      link.download = 'ai-edited-image.png';
       link.click();
       setStatus('تم حفظ الصورة بنجاح');
     });
@@ -961,15 +943,15 @@
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
-      const rememberMe = document.getElementById('rememberMe').checked;
+      const remember = document.getElementById('rememberMe').checked;
 
       if (!email || !password) {
         setStatus('يرجى إدخال البريد الإلكتروني وكلمة المرور', false);
         return;
       }
 
-      const user = { email, password, rememberMe };
-      if (rememberMe) saveUser(user);
+      const user = { email, password, remember };
+      if (remember) saveUser(user);
       else removeUser();
 
       showDashboard(user);
@@ -978,13 +960,13 @@
 
     logoutBtn.addEventListener('click', function () {
       removeUser();
-      showLogin();
+      showAuth();
       document.getElementById('loginForm').reset();
       setStatus('تم تسجيل الخروج');
     });
 
     const savedUser = getSavedUser();
-    if (savedUser && savedUser.email && savedUser.password) {
+    if (savedUser && savedUser.email) {
       showDashboard(savedUser);
     }
   </script>
