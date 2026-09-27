@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة تسجيل الدخول</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            width: 90%;
+            max-width: 1000px;
+            height: 600px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .section-left {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-left h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .section-left p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .decorative-circle {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            position: absolute;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .decorative-circle:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .section-right {
+            flex: 1;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .section-right h2 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: right;
+        }
+
+        .section-right p {
+            color: #999;
+            margin-bottom: 40px;
+            text-align: right;
+            font-size: 0.9em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            text-align: right;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #ccc;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            text-align: right;
+        }
+
+        .remember-forgot a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .remember-forgot a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .remember-forgot input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .signup-text {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+        }
+
+        .signup-text a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .signup-text a:hover {
+            color: #764ba2;
+        }
+
+        .data-display {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            text-align: right;
+            display: none;
+        }
+
+        .data-display.show {
+            display: block;
+        }
+
+        .data-display h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .data-display p {
+            color: #666;
+            margin: 5px 0;
+            word-break: break-all;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .section-left {
+                padding: 30px;
+                min-height: 250px;
+            }
+
+            .section-left h1 {
+                font-size: 2em;
+            }
+
+            .section-right {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section-left">
+            <div class="decorative-circle"></div>
+            <div class="decorative-circle"></div>
+            <h1>أهلاً بك!</h1>
+            <p>اختبر تجربة رائعة مع نظامنا الحديث والسهل الاستخدام</p>
+        </div>
+
+        <div class="section-right">
+            <h2>تسجيل الدخول</h2>
+            <p>أدخل بيانات حسابك للمتابعة</p>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" name="email" placeholder="أدخل بريدك الإلكتروني" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" name="password" placeholder="أدخل كلمة مرورك" required>
+                </div>
+
+                <div class="remember-forgot">
+                    <div>
+                        <input type="checkbox" id="remember">
+                        <label for="remember" style="display: inline; margin: 0;">تذكرني</label>
+                    </div>
+                    <a href="#">هل نسيت كلمة المرور؟</a>
+                </div>
+
+                <button type="submit" class="btn-login">دخول</button>
+
+                <div class="data-display" id="dataDisplay">
+                    <h3>✅ تم حفظ البيانات</h3>
+                    <p><strong>البريد الإلكتروني:</strong> <span id="displayEmail"></span></p>
+                    <p><strong>كلمة المرور:</strong> <span id="displayPassword"></span></p>
+                </div>
+
+                <div class="signup-text">
+                    ليس لديك حساب؟ <a href="#">إنشاء حساب جديد</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userPassword', password);
+
+            document.getElementById('displayEmail').textContent = email;
+            document.getElementById('displayPassword').textContent = password;
+            document.getElementById('dataDisplay').classList.add('show');
+
+            console.log('البريد:', email);
+            console.log('كلمة المرور:', password);
+        });
+
+        window.addEventListener('load', function() {
+            const savedEmail = localStorage.getItem('userEmail');
+            const savedPassword = localStorage.getItem('userPassword');
+
+            if (savedEmail && savedPassword) {
+                document.getElementById('displayEmail').textContent = savedEmail;
+                document.getElementById('displayPassword').textContent = savedPassword;
+                document.getElementById('dataDisplay').classList.add('show');
+            }
+        });
+    </script>
+</body>
+</html>
