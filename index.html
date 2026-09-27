@@ -1,974 +1,668 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PixelForge AI</title>
-  <style>
-    :root {
-      --bg: #09111f;
-      --bg-2: #111c2d;
-      --panel: rgba(15, 23, 42, 0.78);
-      --panel-2: rgba(17, 24, 39, 0.9);
-      --line: rgba(255,255,255,0.08);
-      --text: #edf2ff;
-      --muted: #97a7c4;
-      --primary: #8b5cf6;
-      --primary-2: #3b82f6;
-      --primary-3: #22c55e;
-      --orange: #f59e0b;
-      --danger: #ef4444;
-      --success: #10b981;
-      --shadow: 0 28px 70px rgba(0,0,0,0.42);
-    }
-
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      background:
-        radial-gradient(circle at top left, rgba(139,92,246,0.35), transparent 34%),
-        radial-gradient(circle at bottom right, rgba(59,130,246,0.25), transparent 30%),
-        linear-gradient(135deg, var(--bg), var(--bg-2));
-      color: var(--text);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 22px;
-    }
-
-    .app-shell {
-      width: min(1200px, 100%);
-      min-height: 760px;
-      border-radius: 30px;
-      overflow: hidden;
-      background: rgba(8, 13, 24, 0.8);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
-    }
-
-    .auth-layout {
-      display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
-      min-height: 760px;
-    }
-
-    .hero {
-      position: relative;
-      padding: 42px 38px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      background: linear-gradient(135deg, rgba(139,92,246,0.9), rgba(59,130,246,0.8), rgba(36, 197, 255, 0.8));
-      overflow: hidden;
-    }
-
-    .hero::before,
-    .hero::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-      filter: blur(10px);
-    }
-
-    .hero::before {
-      width: 290px;
-      height: 290px;
-      top: -90px;
-      right: -50px;
-    }
-
-    .hero::after {
-      width: 240px;
-      height: 240px;
-      bottom: -90px;
-      left: -50px;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.16);
-      backdrop-filter: blur(8px);
-      font-size: 12px;
-      letter-spacing: 0.5px;
-      margin-bottom: 18px;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.5rem, 4vw, 4.2rem);
-      margin: 0 0 18px;
-      line-height: 1.05;
-      font-weight: 900;
-      letter-spacing: -1px;
-    }
-
-    .hero p {
-      max-width: 450px;
-      font-size: 1rem;
-      line-height: 1.9;
-      color: rgba(255,255,255,0.9);
-      margin: 0;
-    }
-
-    .stats {
-      margin-top: 30px;
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .stat {
-      min-width: 120px;
-      padding: 16px 18px;
-      border-radius: 18px;
-      background: rgba(17,24,39,0.18);
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 1.5rem;
-      margin-bottom: 4px;
-    }
-
-    .stat span {
-      color: rgba(255,255,255,0.8);
-      font-size: 0.72rem;
-    }
-
-    .login-panel {
-      background: rgba(9, 15, 26, 0.92);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 30px;
-    }
-
-    .login-box {
-      width: min(430px, 100%);
-      padding: 30px 24px;
-      border-radius: 24px;
-      background: rgba(17,24,39,0.84);
-      border: 1px solid var(--line);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.18);
-    }
-
-    .section-title {
-      margin-bottom: 22px;
-    }
-
-    .section-title h2 {
-      margin: 0;
-      font-size: 2rem;
-      font-weight: 800;
-    }
-
-    .section-title p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .field {
-      margin-bottom: 20px;
-    }
-
-    .field label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #dfe8ff;
-    }
-
-    .field input {
-      width: 100%;
-      height: 54px;
-      border-radius: 14px;
-      background: rgba(15,23,42,0.87);
-      border: 1px solid var(--line);
-      color: var(--text);
-      font-size: 1rem;
-      padding: 0 16px;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .field input:focus {
-      border-color: rgba(139, 92, 246, 0.9);
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.14);
-    }
-
-    .field input::placeholder { color: #6e7ea7; }
-
-    .row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin: 8px 0 22px;
-      color: var(--muted);
-      font-size: 0.87rem;
-    }
-
-    .check {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .check input {
-      accent-color: var(--primary);
-      width: 16px;
-      height: 16px;
-    }
-
-    .row a,
-    .link {
-      color: #bfd0ff;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .primary-btn,
-    .ghost-btn,
-    .social-btn {
-      border: none;
-      outline: none;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      font-weight: 700;
-    }
-
-    .primary-btn {
-      width: 100%;
-      height: 54px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-2));
-      color: white;
-      box-shadow: 0 18px 35px rgba(124, 58, 237, 0.32);
-    }
-
-    .primary-btn:hover,
-    .ghost-btn:hover,
-    .social-btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--muted);
-      font-size: 0.8rem;
-      margin: 20px 0;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: var(--line);
-    }
-
-    .socials {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 10px;
-    }
-
-    .social-btn {
-      height: 46px;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid var(--line);
-      color: var(--text);
-    }
-
-    .bottom-link {
-      margin-top: 22px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .dashboard {
-      display: none;
-      min-height: 760px;
-      padding: 22px;
-      background: rgba(8,13,24,0.9);
-    }
-
-    .dashboard.show { display: block; }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 18px 20px;
-      border-radius: 18px;
-      background: rgba(15,23,42,0.86);
-      border: 1px solid var(--line);
-      margin-bottom: 18px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 800;
-    }
-
-    .brand-mark {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--primary), var(--primary-2));
-      box-shadow: 0 14px 24px rgba(124,58,237,0.38);
-    }
-
-    .user-area {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary-3), var(--primary-2));
-      color: white;
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-    }
-
-    .ghost-btn {
-      background: rgba(255,255,255,0.02);
-      color: var(--text);
-      border: 1px solid var(--line);
-      height: 42px;
-      padding: 0 16px;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 350px 1fr;
-      gap: 20px;
-    }
-
-    .panel {
-      background: rgba(15,23,42,0.82);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 18px;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.12);
-    }
-
-    .panel h3 {
-      margin: 0 0 14px;
-      font-size: 1.05rem;
-      font-weight: 800;
-    }
-
-    .upload-box {
-      text-align: center;
-      padding: 18px 14px;
-      border-radius: 18px;
-      border: 1.5px dashed rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.02);
-      margin-bottom: 16px;
-    }
-
-    .upload-box label {
-      display: inline-block;
-      margin-top: 12px;
-      background: linear-gradient(135deg, var(--primary-3), var(--primary-2));
-      color: white;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .upload-box input { display: none; }
-
-    .field-block {
-      margin-bottom: 16px;
-    }
-
-    .field-block label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 0.9rem;
-      color: #e0e7ff;
-      font-weight: 600;
-    }
-
-    .field-block textarea,
-    .field-block select,
-    .field-block input {
-      width: 100%;
-      border: 1px solid var(--line);
-      background: rgba(15,23,42,0.88);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 12px 14px;
-      outline: none;
-      font-size: 0.97rem;
-    }
-
-    .field-block textarea {
-      min-height: 110px;
-      resize: vertical;
-    }
-
-    .field-block textarea:focus,
-    .field-block select:focus,
-    .field-block input:focus {
-      border-color: rgba(139,92,246,0.8);
-      box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
-    }
-
-    .double-row {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 12px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .actions .primary-btn,
-    .actions .ghost-btn {
-      flex: 1;
-      height: 46px;
-    }
-
-    .status {
-      min-height: 26px;
-      margin-top: 16px;
-      font-size: 0.9rem;
-      color: var(--success);
-      font-weight: 600;
-    }
-
-    .preview-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .preview-box {
-      position: relative;
-      display: grid;
-      place-items: center;
-      min-height: 500px;
-      overflow: hidden;
-      border-radius: 24px;
-      background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(28,39,61,0.9));
-      border: 1px solid var(--line);
-    }
-
-    .empty-state {
-      text-align: center;
-      color: var(--muted);
-      padding: 24px;
-      line-height: 2;
-    }
-
-    .preview-box canvas {
-      display: none;
-      max-width: 100%;
-      max-height: 100%;
-      border-radius: 16px;
-      box-shadow: 0 26px 60px rgba(0,0,0,0.28);
-    }
-
-    .toolbar {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0,1fr));
-      gap: 12px;
-    }
-
-    .control {
-      background: rgba(15,23,42,0.9);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px 10px;
-    }
-
-    .control label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.76rem;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .control input[type="range"] {
-      width: 100%;
-      accent-color: var(--primary);
-    }
-
-    @media (max-width: 1000px) {
-      .auth-layout,
-      .layout {
-        grid-template-columns: 1fr;
-      }
-      .toolbar { grid-template-columns: repeat(2, minmax(0,1fr)); }
-    }
-
-    @media (max-width: 560px) {
-      body { padding: 14px; }
-      .hero, .login-panel { padding: 24px 16px; }
-      .topbar { flex-direction: column; align-items: flex-start; }
-      .double-row, .socials, .toolbar { grid-template-columns: 1fr; }
-      .preview-box { min-height: 350px; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="صفحة تسجيل دخول احترافية وآمنة مع واجهة مستخدم جميلة وسهلة الاستخدام. حفظ آمن للبيانات في المتصفح.">
+    <meta name="keywords" content="تسجيل دخول، صفحة دخول، login page، حساب مستخدم، نظام دخول آمن">
+    <meta name="author" content="elharmen818">
+    <meta property="og:title" content="صفحة تسجيل الدخول الاحترافية">
+    <meta property="og:description" content="صفحة دخول احترافية مع تصميم حديث وآمن. تسجيل دخول سهل وسريع مع حفظ البيانات.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#667eea">
+    <meta name="robots" content="index, follow">
+    <title>صفحة تسجيل الدخول | نظام دخول آمن واحترافي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            width: 90%;
+            max-width: 1000px;
+            height: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-left {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-left::before {
+            content: "";
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            z-index: 0;
+        }
+
+        .section-left::after {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            bottom: -80px;
+            left: -80px;
+            z-index: 0;
+        }
+
+        .section-left-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-left h1 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .section-left p {
+            font-size: 1.08em;
+            line-height: 1.8;
+            opacity: 0.95;
+            margin-bottom: 30px;
+            max-width: 380px;
+        }
+
+        .decorative-circle {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            position: absolute;
+            animation: float 3.5s ease-in-out infinite;
+            display: none;
+        }
+
+        .decorative-circle:nth-child(1) {
+            width: 180px;
+            height: 180px;
+            top: -40px;
+            right: -40px;
+        }
+
+        .decorative-circle:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            bottom: 20px;
+            left: 30px;
+            animation-delay: 1.2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-25px); }
+        }
+
+        .section-right {
+            flex: 1;
+            padding: 50px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #fafbfc;
+        }
+
+        .section-right h2 {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            text-align: right;
+            font-weight: 800;
+        }
+
+        .section-right > p {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            text-align: right;
+            font-size: 0.95em;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 700;
+            text-align: right;
+            font-size: 0.95em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 16px;
+            border: 2px solid #e8eef5;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            text-align: right;
+            background: white;
+            color: #2c3e50;
+        }
+
+        .form-group input:hover {
+            border-color: #bdc8db;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+            background: #f8faff;
+        }
+
+        .form-group input::placeholder {
+            color: #bdc8db;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            font-size: 0.9em;
+            text-align: right;
+            flex-direction: row-reverse;
+        }
+
+        .remember-forgot a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .remember-forgot a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remember-forgot input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .remember-forgot label {
+            cursor: pointer;
+            color: #2c3e50;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(102, 126, 234, 0.45);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .signup-text {
+            margin-top: 22px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .signup-text a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .signup-text a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .data-display {
+            margin-top: 18px;
+            padding: 16px 18px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0.04));
+            border: 1.5px solid #22c55e;
+            border-radius: 12px;
+            text-align: right;
+            display: none;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .data-display.show {
+            display: block;
+        }
+
+        .data-display h3 {
+            color: #22c55e;
+            margin-bottom: 10px;
+            font-size: 1em;
+            font-weight: 700;
+        }
+
+        .data-display p {
+            color: #059669;
+            margin: 6px 0;
+            word-break: break-all;
+            font-size: 0.9em;
+        }
+
+        .data-display strong {
+            color: #047857;
+            font-weight: 700;
+        }
+
+        .error-message {
+            display: none;
+            margin-top: 12px;
+            padding: 12px 14px;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(239, 68, 68, 0.04));
+            border: 1.5px solid #ef4444;
+            border-radius: 10px;
+            color: #dc2626;
+            font-size: 0.9em;
+            text-align: right;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .section-left h1 {
+                font-size: 2.2em;
+            }
+
+            .section-right {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                max-width: 100%;
+            }
+
+            .section-left {
+                padding: 35px 25px;
+                min-height: 280px;
+            }
+
+            .section-left h1 {
+                font-size: 2em;
+            }
+
+            .section-left p {
+                font-size: 0.95em;
+            }
+
+            .section-right {
+                padding: 35px 25px;
+                min-height: auto;
+            }
+
+            .section-right h2 {
+                font-size: 1.6em;
+            }
+
+            body {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 15px;
+            }
+
+            .section-left h1 {
+                font-size: 1.7em;
+            }
+
+            .section-right h2 {
+                font-size: 1.3em;
+            }
+
+            .form-group input,
+            .btn-login {
+                font-size: 16px;
+            }
+        }
+
+        .success-icon {
+            display: inline-block;
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body>
-  <div class="app-shell">
-    <section class="auth-layout" id="authLayout">
-      <div class="hero">
-        <div class="hero-content">
-          <div class="chip">PixelForge AI</div>
-          <h1>صنع صورك<br>بذكاء اصطناعي</h1>
-          <p>
-            حرّر الصور بسرعة، طبق التأثيرات الذكية، وحفظ كل ما تحتاجه في تجربة احترافية سهلة الاستخدام داخل المتصفح.
-          </p>
-
-          <div class="stats">
-            <div class="stat">
-              <strong>4.8</strong>
-              <span>تقييم</span>
+    <div class="container">
+        <div class="section-left">
+            <div class="decorative-circle"></div>
+            <div class="decorative-circle"></div>
+            <div class="section-left-content">
+                <h1>أهلاً بك! 👋</h1>
+                <p>اختبر تجربة رائعة مع نظامنا الحديث والسهل الاستخدام. نحافظ على أمان بيانتك بكل عناية.</p>
             </div>
-            <div class="stat">
-              <strong>2.4K</strong>
-              <span>صور</span>
-            </div>
-            <div class="stat">
-              <strong>AI</strong>
-              <span>تأثيرات</span>
-            </div>
-          </div>
         </div>
-      </div>
 
-      <div class="login-panel">
-        <div class="login-box">
-          <div class="section-title">
+        <div class="section-right">
             <h2>تسجيل الدخول</h2>
-            <p>ادخل بياناتك للوصول إلى لوحة التحرير</p>
-          </div>
+            <p>أدخل بيانات حسابك للمتابعة</p>
 
-          <form id="loginForm">
-            <div class="field">
-              <label for="email">البريد الإلكتروني</label>
-              <input id="email" type="email" placeholder="example@email.com" required />
-            </div>
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="example@email.com" 
+                        required
+                        aria-label="البريد الإلكتروني"
+                        autocomplete="email"
+                    >
+                </div>
 
-            <div class="field">
-              <label for="password">كلمة المرور</label>
-              <input id="password" type="password" placeholder="••••••••" required />
-            </div>
+                <div class="form-group">
+                    <label for="password">كلمة المرور</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="••••••••" 
+                        required
+                        aria-label="كلمة المرور"
+                        autocomplete="current-password"
+                    >
+                </div>
 
-            <div class="row">
-              <label class="check"><input type="checkbox" id="rememberMe" /> تذكرني</label>
-              <a href="#">هل نسيت كلمة المرور؟</a>
-            </div>
+                <div class="remember-forgot">
+                    <a href="#" aria-label="ا��تعادة كلمة المرور">هل نسيت كلمة المرور؟</a>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="remember" aria-label="تذكرني">
+                        <label for="remember">تذكرني</label>
+                    </div>
+                </div>
 
-            <button type="submit" class="primary-btn">دخول</button>
+                <button type="submit" class="btn-login">دخول</button>
 
-            <div class="divider">أو</div>
+                <div class="error-message" id="errorMessage"></div>
 
-            <div class="socials">
-              <button type="button" class="social-btn">Google</button>
-              <button type="button" class="social-btn">GitHub</button>
-            </div>
+                <div class="data-display" id="dataDisplay">
+                    <h3><span class="success-icon">✅</span>تم حفظ البيانات بنجاح</h3>
+                    <p><strong>البريد الإلكتروني:</strong> <span id="displayEmail"></span></p>
+                    <p><strong>كلمة المرور:</strong> <span id="displayPassword" style="letter-spacing: 2px;">••••••••</span></p>
+                </div>
 
-            <div class="bottom-link">
-              ليس لديك حساب؟ <a href="#" class="link">إنشاء حساب جديد</a>
-            </div>
-          </form>
+                <div class="signup-text">
+                    ليس لديك حساب؟ <a href="#" aria-label="إنشاء حساب جديد">إنشاء حساب جديد</a>
+                </div>
+            </form>
         </div>
-      </div>
-    </section>
+    </div>
 
-    <section class="dashboard" id="dashboard">
-      <div class="topbar">
-        <div class="brand">
-          <div class="brand-mark">✦</div>
-          PixelForge AI
-        </div>
+    <script>
+        // Configuration
+        const STORAGE_KEY = 'secureLoginUser';
+        const MAX_PASSWORD_LENGTH = 128;
+        const MIN_PASSWORD_LENGTH = 6;
 
-        <div class="user-area">
-          <div class="avatar" id="userInitial">U</div>
-          <span id="userName">مستخدم</span>
-          <button class="ghost-btn" id="logoutBtn">تسجيل الخروج</button>
-        </div>
-      </div>
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const dataDisplay = document.getElementById('dataDisplay');
+        const displayEmail = document.getElementById('displayEmail');
+        const displayPassword = document.getElementById('displayPassword');
+        const errorMessage = document.getElementById('errorMessage');
 
-      <div class="layout">
-        <aside class="panel">
-          <h3>رفع الصورة</h3>
+        // Validate email format
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email) && email.length <= 254;
+        }
 
-          <div class="upload-box">
-            <div>اختر ملف الصورة</div>
-            <label for="imageUpload">رفع الصورة</label>
-            <input id="imageUpload" type="file" accept="image/*" />
-          </div>
+        // Validate password strength
+        function validatePassword(password) {
+            if (password.length < MIN_PASSWORD_LENGTH) {
+                return { valid: false, message: `كلمة المرور يجب أن تكون على الأقل ${MIN_PASSWORD_LENGTH} أحرف` };
+            }
+            if (password.length > MAX_PASSWORD_LENGTH) {
+                return { valid: false, message: `كلمة المرور طويلة جداً` };
+            }
+            return { valid: true, message: '' };
+        }
 
-          <div class="field-block">
-            <label for="promptText">وصف التحرير الذكي</label>
-            <textarea id="promptText" placeholder="مثال: أضف ألوان زاهية، صور سينمائية احترافية، إضاءة جميلة">حسن الصورة، اجعلها احترافية ومنعشة، أضف إضاءة رائعة</textarea>
-          </div>
+        // Show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 4000);
+        }
 
-          <div class="double-row">
-            <div class="field-block">
-              <label for="effectPreset">تأثير جاهز</label>
-              <select id="effectPreset">
-                <option value="custom">تخصيص</option>
-                <option value="cinematic">سينمائي</option>
-                <option value="vivid">زاهٍ</option>
-                <option value="soft">ناعِم</option>
-                <option value="mono">أبيض وأسود</option>
-              </select>
-            </div>
+        // Save user data securely
+        function saveUser(user) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    email: user.email,
+                    timestamp: new Date().toISOString(),
+                    passwordHint: '••••••••'
+                }));
+            } catch (e) {
+                console.error('Failed to save user data:', e);
+            }
+        }
 
-            <div class="field-block">
-              <label for="resolution">الدقة</label>
-              <select id="resolution">
-                <option value="original">الأصلية</option>
-                <option value="hd">HD</option>
-                <option value="4k">4K</option>
-              </select>
-            </div>
-          </div>
+        // Remove user data
+        function removeUser() {
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+            } catch (e) {
+                console.error('Failed to remove user data:', e);
+            }
+        }
 
-          <div class="actions">
-            <button class="primary-btn" id="applyAiBtn">تطبيق التأثير</button>
-            <button class="ghost-btn" id="resetBtn">إعادة</button>
-          </div>
+        // Get saved user
+        function getSavedUser() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                return data ? JSON.parse(data) : null;
+            } catch (e) {
+                console.error('Failed to retrieve user data:', e);
+                return null;
+            }
+        }
 
-          <div class="actions">
-            <button class="ghost-btn" id="downloadBtn" style="background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.3); color: #b9f5d8;">حفظ الصورة</button>
-          </div>
+        // Handle form submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
 
-          <div id="status" class="status"></div>
-        </aside>
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
 
-        <main class="preview-panel">
-          <div class="panel preview-box" id="previewBox">
-            <div id="emptyState" class="empty-state">
-              لا توجد صورة محمّلة بعد.<br>
-              ارفع صورة لبدء التحرير.
-            </div>
-            <canvas id="canvas" width="900" height="600"></canvas>
-          </div>
+            // Clear previous error
+            errorMessage.classList.remove('show');
 
-          <div class="panel">
-            <h3>إعدادات التحرير</h3>
-            <div class="toolbar">
-              <div class="control">
-                <label for="brightness">الإضاءة <span id="brightnessVal">100%</span></label>
-                <input id="brightness" type="range" min="0" max="200" value="100" />
-              </div>
+            // Validate email
+            if (!email) {
+                showError('يرجى إدخال البريد الإلكتروني');
+                return;
+            }
 
-              <div class="control">
-                <label for="contrast">التباين <span id="contrastVal">100%</span></label>
-                <input id="contrast" type="range" min="0" max="200" value="100" />
-              </div>
+            if (!isValidEmail(email)) {
+                showError('البريد الإلكتروني غير صحيح');
+                return;
+            }
 
-              <div class="control">
-                <label for="saturation">التشبع <span id="saturationVal">100%</span></label>
-                <input id="saturation" type="range" min="0" max="200" value="100" />
-              </div>
+            // Validate password
+            if (!password) {
+                showError('يرجى إدخال كلمة المرور');
+                return;
+            }
 
-              <div class="control">
-                <label for="sepia">السبيا <span id="sepiaVal">0%</span></label>
-                <input id="sepia" type="range" min="0" max="100" value="0" />
-              </div>
+            const passwordValidation = validatePassword(password);
+            if (!passwordValidation.valid) {
+                showError(passwordValidation.message);
+                return;
+            }
 
-              <div class="control">
-                <label for="blur">التمويه <span id="blurVal">0px</span></label>
-                <input id="blur" type="range" min="0" max="10" value="0" />
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    </section>
-  </div>
+            // Save user data
+            const user = { email, password };
+            saveUser(user);
 
-  <script>
-    const STORAGE_KEY = 'pixelForgeUser';
-    const authLayout = document.getElementById('authLayout');
-    const dashboard = document.getElementById('dashboard');
-    const loginForm = document.getElementById('loginForm');
-    const userName = document.getElementById('userName');
-    const userInitial = document.getElementById('userInitial');
-    const status = document.getElementById('status');
+            // Display success message
+            displayEmail.textContent = email;
+            displayPassword.textContent = '••••••••';
+            dataDisplay.classList.add('show');
 
-    const imageUpload = document.getElementById('imageUpload');
-    const canvas = document.getElementById('canvas');
-    const emptyState = document.getElementById('emptyState');
-    const promptText = document.getElementById('promptText');
-    const applyAiBtn = document.getElementById('applyAiBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const effectPreset = document.getElementById('effectPreset');
-    const logoutBtn = document.getElementById('logoutBtn');
+            // Log to console for debugging
+            console.log('✅ Login successful:', { email: email, timestamp: new Date().toISOString() });
 
-    let originalImage = null;
-    let imageReady = false;
+            // Optional: Reset form after 2 seconds
+            setTimeout(() => {
+                // loginForm.reset();
+            }, 2000);
+        });
 
-    function setStatus(text, ok = true) {
-      status.textContent = text;
-      status.style.color = ok ? '#9ef0c1' : '#f7b4b4';
+        // Load saved user on page load
+        window.addEventListener('load', function() {
+            const savedUser = getSavedUser();
+            if (savedUser && savedUser.email) {
+                displayEmail.textContent = savedUser.email;
+                displayPassword.textContent = '••••••••';
+                dataDisplay.classList.add('show');
+                console.log('✅ User loaded from storage:', savedUser.email);
+            }
+        });
+
+        // Add real-time email validation
+        emailInput.addEventListener('blur', function() {
+            if (this.value && !isValidEmail(this.value.trim())) {
+                this.style.borderColor = '#ef4444';
+            } else {
+                this.style.borderColor = '';
+            }
+        });
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', function() {
+            // Optional: Clear data on close if needed
+            // removeUser();
+        });
+    </script>
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "صفحة تسجيل الدخول",
+        "description": "صفحة دخول احترافية وآمنة مع واجهة مستخدم جميلة",
+        "url": "https://elharmen818-stack.github.io/login-page/",
+        "applicationCategory": "WebApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EGP"
+        }
     }
-
-    function saveUser(user) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-    }
-
-    function removeUser() {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-
-    function getSavedUser() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY));
-      } catch {
-        return null;
-      }
-    }
-
-    function showDashboard(user) {
-      const email = user?.email || 'مستخدم';
-      const name = email.split('@')[0] || 'مستخدم';
-      userName.textContent = name;
-      userInitial.textContent = name.charAt(0).toUpperCase();
-      authLayout.style.display = 'none';
-      dashboard.classList.add('show');
-    }
-
-    function showAuth() {
-      dashboard.classList.remove('show');
-      authLayout.style.display = 'grid';
-    }
-
-    function applyFilters() {
-      const brightness = document.getElementById('brightness');
-      const contrast = document.getElementById('contrast');
-      const saturation = document.getElementById('saturation');
-      const sepia = document.getElementById('sepia');
-      const blur = document.getElementById('blur');
-
-      document.getElementById('brightnessVal').textContent = brightness.value + '%';
-      document.getElementById('contrastVal').textContent = contrast.value + '%';
-      document.getElementById('saturationVal').textContent = saturation.value + '%';
-      document.getElementById('sepiaVal').textContent = sepia.value + '%';
-      document.getElementById('blurVal').textContent = blur.value + 'px';
-
-      if (!imageReady || !originalImage) return;
-
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.filter = `brightness(${brightness.value}%) contrast(${contrast.value}%) saturate(${saturation.value}%) sepia(${sepia.value}%) blur(${blur.value}px)`;
-      ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
-      ctx.filter = 'none';
-    }
-
-    function applyPreset() {
-      const preset = effectPreset.value;
-      const controls = {
-        brightness: document.getElementById('brightness'),
-        contrast: document.getElementById('contrast'),
-        saturation: document.getElementById('saturation'),
-        sepia: document.getElementById('sepia'),
-        blur: document.getElementById('blur')
-      };
-
-      if (preset === 'cinematic') {
-        controls.brightness.value = 115;
-        controls.contrast.value = 130;
-        controls.saturation.value = 110;
-        controls.sepia.value = 12;
-        controls.blur.value = 0;
-      }
-      else if (preset === 'vivid') {
-        controls.brightness.value = 112;
-        controls.contrast.value = 120;
-        controls.saturation.value = 150;
-        controls.sepia.value = 0;
-        controls.blur.value = 0;
-      }
-      else if (preset === 'soft') {
-        controls.brightness.value = 108;
-        controls.contrast.value = 92;
-        controls.saturation.value = 82;
-        controls.sepia.value = 8;
-        controls.blur.value = 1;
-      }
-      else if (preset === 'mono') {
-        controls.brightness.value = 96;
-        controls.contrast.value = 125;
-        controls.saturation.value = 18;
-        controls.sepia.value = 0;
-        controls.blur.value = 0;
-      }
-      else {
-        controls.brightness.value = 100;
-        controls.contrast.value = 100;
-        controls.saturation.value = 100;
-        controls.sepia.value = 0;
-        controls.blur.value = 0;
-      }
-
-      applyFilters();
-    }
-
-    function renderLoadedImage(file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const img = new Image();
-        img.onload = function () {
-          originalImage = img;
-          imageReady = true;
-          emptyState.style.display = 'none';
-          canvas.style.display = 'block';
-          canvas.width = img.width;
-          canvas.height = img.height;
-          applyFilters();
-          setStatus('تم تحميل الصورة بنجاح');
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    imageUpload.addEventListener('change', function (e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      renderLoadedImage(file);
-    });
-
-    ['brightness', 'contrast', 'saturation', 'sepia', 'blur'].forEach((id) => {
-      document.getElementById(id).addEventListener('input', applyFilters);
-    });
-
-    effectPreset.addEventListener('change', applyPreset);
-
-    applyAiBtn.addEventListener('click', function () {
-      if (!imageReady || !originalImage) {
-        setStatus('يرجى رفع صورة أولاً', false);
-        return;
-      }
-
-      const text = promptText.value.toLowerCase();
-      if (!text) {
-        setStatus('اكتب وصف التحرير أولاً', false);
-        return;
-      }
-
-      if (text.includes('سينمائي') || text.includes('cinematic')) {
-        effectPreset.value = 'cinematic';
-      } else if (text.includes('زاه') || text.includes('vivid') || text.includes('ساطع')) {
-        effectPreset.value = 'vivid';
-      } else if (text.includes('ناع') || text.includes('soft')) {
-        effectPreset.value = 'soft';
-      } else if (text.includes('أسود') || text.includes('mono') || text.includes('black')) {
-        effectPreset.value = 'mono';
-      } else {
-        effectPreset.value = 'custom';
-      }
-
-      applyPreset();
-      setStatus('تم تطبيق التأثير الذكي بنجاح');
-    });
-
-    resetBtn.addEventListener('click', function () {
-      document.getElementById('brightness').value = 100;
-      document.getElementById('contrast').value = 100;
-      document.getElementById('saturation').value = 100;
-      document.getElementById('sepia').value = 0;
-      document.getElementById('blur').value = 0;
-      effectPreset.value = 'custom';
-      applyFilters();
-      setStatus('تمت إعادة ضبط الصورة إلى الوضع الأساسي');
-    });
-
-    downloadBtn.addEventListener('click', function () {
-      if (!imageReady) {
-        setStatus(' لا توجد صورة لحفظها', false);
-        return;
-      }
-      const link = document.createElement('a');
-      link.download = 'pixelforge-edited.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      setStatus('تم حفظ الصورة بنجاح');
-    });
-
-    loginForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const remember = document.getElementById('rememberMe').checked;
-
-      if (!email || !password) {
-        setStatus('يرجى إدخال البريد الإلكتروني وكلمة المرور', false);
-        return;
-      }
-
-      const user = { email, password, remember };
-      if (remember) saveUser(user);
-      else removeUser();
-
-      showDashboard(user);
-      setStatus('تم تسجيل الدخول بنجاح');
-    });
-
-    logoutBtn.addEventListener('click', function () {
-      removeUser();
-      showAuth();
-      document.getElementById('loginForm').reset();
-      setStatus('تم تسجيل الخروج');
-    });
-
-    const savedUser = getSavedUser();
-    if (savedUser && savedUser.email) {
-      showDashboard(savedUser);
-    }
-  </script>
+    </script>
 </body>
 </html>
