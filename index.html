@@ -1,323 +1,992 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صفحة تسجيل الدخول</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Photo Studio</title>
+  <style>
+    :root {
+      --bg1: #0b1020;
+      --bg2: #171d35;
+      --card: rgba(15, 23, 42, 0.85);
+      --card2: rgba(17, 24, 39, 0.9);
+      --primary: #7c3aed;
+      --primary-2: #22c55e;
+      --primary-3: #06b6d4;
+      --text: #e5e7eb;
+      --muted: #a8b0c2;
+      --border: rgba(255,255,255,0.08);
+      --white: #ffffff;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    * { box-sizing: border-box; }
 
-        .container {
-            display: flex;
-            width: 90%;
-            max-width: 1000px;
-            height: 600px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--text);
+    }
 
-        .section-left {
-            flex: 1;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-            text-align: center;
-            position: relative;
-        }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .section-left h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
+    .app {
+      width: min(1200px, calc(100% - 32px));
+      min-height: 740px;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+      border: 1px solid var(--border);
+      background: rgba(10, 14, 28, 0.85);
+      backdrop-filter: blur(14px);
+    }
 
-        .section-left p {
-            font-size: 1.1em;
-            line-height: 1.6;
-            opacity: 0.9;
-            margin-bottom: 30px;
-        }
+    .login-screen {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      min-height: 740px;
+    }
 
-        .decorative-circle {
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            position: absolute;
-            animation: float 3s ease-in-out infinite;
-        }
+    .hero {
+      position: relative;
+      background: linear-gradient(135deg, rgba(124,58,237,0.95), rgba(59,130,246,0.9), rgba(6,182,212,0.8));
+      padding: 42px 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
 
-        .decorative-circle:nth-child(2) {
-            width: 100px;
-            height: 100px;
-            animation-delay: 1s;
-        }
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      filter: blur(4px);
+    }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
+    .hero::before { top: -80px; right: -60px; }
+    .hero::after { bottom: -90px; left: -70px; }
 
-        .section-right {
-            flex: 1;
-            padding: 60px 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
 
-        .section-right h2 {
-            font-size: 1.8em;
-            color: #333;
-            margin-bottom: 10px;
-            text-align: right;
-        }
+    .badge {
+      display: inline-flex;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(8px);
+    }
 
-        .section-right p {
-            color: #999;
-            margin-bottom: 40px;
-            text-align: right;
-            font-size: 0.9em;
-        }
+    .hero h1 {
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      margin: 0 0 18px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
 
-        .form-group {
-            margin-bottom: 25px;
-        }
+    .hero p {
+      margin: 0;
+      font-size: 1.04rem;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.8;
+      max-width: 420px;
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
-            text-align: right;
-        }
+    .hero-stats {
+      margin-top: 30px;
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
 
-        .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #eee;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            text-align: right;
-        }
+    .stat {
+      min-width: 115px;
+      background: rgba(17,24,39,0.18);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 16px 18px;
+    }
 
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
+    .stat strong {
+      display: block;
+      font-size: 1.4rem;
+    }
 
-        .form-group input::placeholder {
-            color: #ccc;
-        }
+    .stat span {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.8);
+    }
 
-        .remember-forgot {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            font-size: 0.9em;
-            text-align: right;
-        }
+    .login-panel {
+      background: rgba(7, 11, 20, 0.88);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
 
-        .remember-forgot a {
-            color: #667eea;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
+    .login-box {
+      width: min(430px, 100%);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 30px 24px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.2);
+    }
 
-        .remember-forgot a:hover {
-            color: #764ba2;
-            text-decoration: underline;
-        }
+    .login-header {
+      margin-bottom: 25px;
+    }
 
-        .remember-forgot input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
+    .login-header h2 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 800;
+    }
 
-        .btn-login {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-        }
+    .login-header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
 
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
+    .field {
+      margin-bottom: 18px;
+    }
 
-        .btn-login:active {
-            transform: translateY(0);
-        }
+    .field label {
+      display: block;
+      font-size: 0.9rem;
+      color: #d6deef;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
 
-        .signup-text {
-            margin-top: 20px;
-            text-align: center;
-            color: #666;
-        }
+    .field input {
+      width: 100%;
+      height: 52px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(17, 24, 39, 0.9);
+      color: var(--white);
+      padding: 0 16px;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s ease;
+    }
 
-        .signup-text a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
+    .field input:focus {
+      border-color: rgba(124, 58, 237, 0.8);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.18);
+    }
 
-        .signup-text a:hover {
-            color: #764ba2;
-        }
+    .field input::placeholder { color: #7c89a9; }
 
-        .data-display {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f5f5f5;
-            border-radius: 8px;
-            text-align: right;
-            display: none;
-        }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 10px 0 20px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
 
-        .data-display.show {
-            display: block;
-        }
+    .checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .data-display h3 {
-            color: #333;
-            margin-bottom: 10px;
-        }
+    .checkbox input {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+    }
 
-        .data-display p {
-            color: #666;
-            margin: 5px 0;
-            word-break: break-all;
-        }
+    .row a {
+      color: #b7c4ff;
+      text-decoration: none;
+    }
 
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                height: auto;
-            }
+    .primary-btn {
+      width: 100%;
+      height: 52px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), #4f46e5);
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 14px 30px rgba(124,58,237,0.36);
+    }
 
-            .section-left {
-                padding: 30px;
-                min-height: 250px;
-            }
+    .primary-btn:hover {
+      transform: translateY(-1px);
+    }
 
-            .section-left h1 {
-                font-size: 2em;
-            }
+    .secondary-btn {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
 
-            .section-right {
-                padding: 40px 30px;
-            }
-        }
-    </style>
+    .or {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      margin: 18px 0;
+      font-size: 0.82rem;
+    }
+
+    .or::before, .or::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .social-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .social-btn {
+      width: 100%;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--white);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .info-text {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .info-text a {
+      color: #b6c6ff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .dashboard {
+      display: none;
+      min-height: 740px;
+      background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(17,24,39,0.92));
+      padding: 24px;
+    }
+
+    .dashboard.show { display: block; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-3));
+      box-shadow: 0 8px 18px rgba(124,58,237,0.38);
+      font-size: 1.1rem;
+    }
+
+    .user-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-2), var(--primary-3));
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 22px;
+    }
+
+    .panel {
+      background: rgba(15,23,42,0.88);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+    }
+
+    .panel h3 {
+      margin: 0 0 14px;
+      font-size: 1.1rem;
+    }
+
+    .upload-box {
+      border: 1.5px dashed rgba(255,255,255,0.18);
+      border-radius: 18px;
+      padding: 20px 16px;
+      text-align: center;
+      background: rgba(255,255,255,0.02);
+      margin-bottom: 16px;
+    }
+
+    .upload-box input[type="file"] {
+      display: none;
+    }
+
+    .upload-btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary-2), var(--primary-3));
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .field-block {
+      margin-bottom: 16px;
+    }
+
+    .field-block label {
+      display: block;
+      font-size: 0.9rem;
+      color: #dfe8ff;
+      margin-bottom: 8px;
+    }
+
+    .field-block textarea {
+      width: 100%;
+      min-height: 110px;
+      border-radius: 14px;
+      background: rgba(17,24,39,0.9);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.08);
+      resize: vertical;
+      padding: 12px 14px;
+      outline: none;
+    }
+
+    .field-block textarea:focus,
+    .field-block select:focus,
+    .field-block input:focus {
+      border-color: rgba(124,58,237,0.7);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.14);
+    }
+
+    .field-block select,
+    .field-block input {
+      width: 100%;
+      border-radius: 12px;
+      background: rgba(17,24,39,0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--white);
+      padding: 12px 14px;
+      outline: none;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .action-row .primary-btn,
+    .action-row .secondary-btn {
+      flex: 1;
+      height: 46px;
+    }
+
+    .preview-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .preview-box {
+      height: 500px;
+      overflow: hidden;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(17,24,39,0.86), rgba(31,41,55,0.86));
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .preview-box img {
+      display: none;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 16px;
+      box-shadow: 0 28px 60px rgba(0,0,0,0.28);
+      filter: brightness(1) contrast(1) saturate(1) sepia(0) blur(0px) grayscale(0);
+    }
+
+    .preview-box canvas {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 16px;
+      box-shadow: 0 28px 60px rgba(0,0,0,0.28);
+    }
+
+    .empty-state {
+      color: var(--muted);
+      text-align: center;
+      padding: 20px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0,1fr));
+      gap: 12px;
+    }
+
+    .control {
+      background: rgba(17,24,39,0.8);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 10px;
+    }
+
+    .control label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .control input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    .status {
+      margin-top: 16px;
+      min-height: 24px;
+      color: var(--success);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 980px) {
+      .login-screen { grid-template-columns: 1fr; }
+      .workspace { grid-template-columns: 1fr; }
+      .toolbar { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+
+    @media (max-width: 560px) {
+      .app { width: min(100% - 18px, 1200px); }
+      .login-panel, .hero { padding: 22px 16px; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+      .mini-grid { grid-template-columns: 1fr; }
+      .toolbar { grid-template-columns: 1fr; }
+      .preview-box { height: 360px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="section-left">
-            <div class="decorative-circle"></div>
-            <div class="decorative-circle"></div>
-            <h1>أهلاً بك!</h1>
-            <p>اختبر تجربة رائعة مع نظامنا الحديث والسهل الاستخدام</p>
-        </div>
+  <div class="app">
+    <section class="login-screen" id="loginScreen">
+      <div class="hero">
+        <div class="hero-content">
+          <div class="badge">AI Photo Studio</div>
+          <h1>أنشئ صورك<br>بذكاء اصطناعي</h1>
+          <p>
+            قم بتسجيل الدخول واستخدم أدوات تحرير الصور الذكية، أضف التأثيرات،
+            غير الألوان، وحافظ على مشروعك داخل المتصفح بطريقة سريعة وسهلة.
+          </p>
 
-        <div class="section-right">
+          <div class="hero-stats">
+            <div class="stat">
+              <strong>2.4K</strong>
+              <span>صور تم تحريرها</span>
+            </div>
+            <div class="stat">
+              <strong>4.8</strong>
+              <span>تقييم المستخدمين</span>
+            </div>
+            <div class="stat">
+              <strong>AI</strong>
+              <span>مؤثرات ذكية</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="login-panel">
+        <div class="login-box">
+          <div class="login-header">
             <h2>تسجيل الدخول</h2>
-            <p>أدخل بيانات حسابك للمتابعة</p>
+            <p>أدخل بيانات حسابك للوصول إلى لوحة التحرير</p>
+          </div>
 
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">البريد الإلكتروني</label>
-                    <input type="email" id="email" name="email" placeholder="أدخل بريدك الإلكتروني" required>
-                </div>
+          <form id="loginForm">
+            <div class="field">
+              <label for="email">البريد الإلكتروني</label>
+              <input id="email" type="email" placeholder="example@email.com" required />
+            </div>
 
-                <div class="form-group">
-                    <label for="password">كلمة المرور</label>
-                    <input type="password" id="password" name="password" placeholder="أدخل كلمة مرورك" required>
-                </div>
+            <div class="field">
+              <label for="password">كلمة المرور</label>
+              <input id="password" type="password" placeholder="••••••••" required />
+            </div>
 
-                <div class="remember-forgot">
-                    <div>
-                        <input type="checkbox" id="remember">
-                        <label for="remember" style="display: inline; margin: 0;">تذكرني</label>
-                    </div>
-                    <a href="#">هل نسيت كلمة المرور؟</a>
-                </div>
+            <div class="row">
+              <label class="checkbox"><input type="checkbox" id="rememberMe" /> تذكرني</label>
+              <a href="#">هل نسيت كلمة المرور؟</a>
+            </div>
 
-                <button type="submit" class="btn-login">دخول</button>
+            <button type="submit" class="primary-btn">دخول</button>
 
-                <div class="data-display" id="dataDisplay">
-                    <h3>✅ تم حفظ البيانات</h3>
-                    <p><strong>البريد الإلكتروني:</strong> <span id="displayEmail"></span></p>
-                    <p><strong>كلمة المرور:</strong> <span id="displayPassword"></span></p>
-                </div>
+            <div class="or">أو</div>
 
-                <div class="signup-text">
-                    ليس لديك حساب؟ <a href="#">إنشاء حساب جديد</a>
-                </div>
-            </form>
+            <div class="social-row">
+              <button type="button" class="social-btn">Google</button>
+              <button type="button" class="social-btn">GitHub</button>
+            </div>
+
+            <div class="info-text">
+              ليس لديك حساب؟ <a href="#">إنشاء حساب جديد</a>
+            </div>
+          </form>
         </div>
-    </div>
+      </div>
+    </section>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+    <section class="dashboard" id="dashboard">
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-mark">✦</div>
+          AI Photo Studio
+        </div>
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+        <div class="user-box">
+          <div class="avatar" id="userInitial">U</div>
+          <span id="userName">المستخدم</span>
+          <button class="secondary-btn" id="logoutBtn">تسجيل الخروج</button>
+        </div>
+      </div>
 
-            localStorage.setItem('userEmail', email);
-            localStorage.setItem('userPassword', password);
+      <div class="workspace">
+        <aside class="panel">
+          <h3>تحميل الصورة</h3>
+          <div class="upload-box">
+            <div>اختر الصورة من جهازك</div>
+            <label class="upload-btn" for="imageUpload">رفع الصورة</label>
+            <input id="imageUpload" type="file" accept="image/*" />
+          </div>
 
-            document.getElementById('displayEmail').textContent = email;
-            document.getElementById('displayPassword').textContent = password;
-            document.getElementById('dataDisplay').classList.add('show');
+          <div class="field-block">
+            <label for="promtText">وصف تحرير الذكاء الاصطناعي</label>
+            <textarea id="promtText" placeholder="اكتب وصفك: أضف تأثير سينمائي، أضف ألوان متوهجة، زد التفاصيل، اجعل الصورة تبدو احترافية...">حسن الصورة، أضف إضاءة زاهية، مظهر احترافي ساطع</textarea>
+          </div>
 
-            console.log('البيانات المحفوظة:');
-            console.log('البريد:', email);
-            console.log('كلمة المرور:', password);
-        });
+          <div class="mini-grid">
+            <div class="field-block">
+              <label for="effectPreset">تأثير جاهز</label>
+              <select id="effectPreset">
+                <option value="custom">تخصيص</option>
+                <option value="cinematic">سينمائي</option>
+                <option value="vivid">زاهٍ</option>
+                <option value="soft">ناعِم</option>
+                <option value="mono">أبيض وأسود</option>
+              </select>
+            </div>
 
-        window.addEventListener('load', function() {
-            const savedEmail = localStorage.getItem('userEmail');
-            const savedPassword = localStorage.getItem('userPassword');
+            <div class="field-block">
+              <label for="resolution">الدقة</label>
+              <select id="resolution">
+                <option value="full">الأصلية</option>
+                <option value="hd">HD</option>
+                <option value="4k">4K</option>
+              </select>
+            </div>
+          </div>
 
-            if (savedEmail && savedPassword) {
-                document.getElementById('displayEmail').textContent = savedEmail;
-                document.getElementById('displayPassword').textContent = savedPassword;
-                document.getElementById('dataDisplay').classList.add('show');
-            }
-        });
-    </script>
+          <div class="action-row">
+            <button class="primary-btn" id="applyAiBtn">تطبيق التأثير</button>
+            <button class="secondary-btn" id="resetBtn">إعادة</button>
+          </div>
+
+          <div class="action-row">
+            <button class="secondary-btn" id="downloadBtn" style="background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.35); color: #baf6dd;">حفظ الصورة</button>
+          </div>
+
+          <div id="status" class="status"></div>
+        </aside>
+
+        <main class="preview-panel">
+          <div class="panel preview-box" id="previewBox">
+            <div id="emptyState" class="empty-state">
+              لا توجد صورة محمّلة بعد.<br>
+              أضف صورة لبدء التحرير.
+            </div>
+            <canvas id="canvas" width="900" height="600" style="display:none;"></canvas>
+          </div>
+
+          <div class="panel">
+            <h3>إعدادات التحرير</h3>
+            <div class="toolbar">
+              <div class="control">
+                <label for="brightness">الإضاءة <span id="brightnessVal">100%</span></label>
+                <input id="brightness" type="range" min="0" max="200" value="100" />
+              </div>
+
+              <div class="control">
+                <label for="contrast">التباين <span id="contrastVal">100%</span></label>
+                <input id="contrast" type="range" min="0" max="200" value="100" />
+              </div>
+
+              <div class="control">
+                <label for="saturation">التشبع <span id="saturationVal">100%</span></label>
+                <input id="saturation" type="range" min="0" max="200" value="100" />
+              </div>
+
+              <div class="control">
+                <label for="sepia">السبيا <span id="sepiaVal">0%</span></label>
+                <input id="sepia" type="range" min="0" max="100" value="0" />
+              </div>
+
+              <div class="control">
+                <label for="blur">التمويه <span id="blurVal">0px</span></label>
+                <input id="blur" type="range" min="0" max="10" value="0" />
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'aiPhotoStudioUser';
+    const loginScreen = document.getElementById('loginScreen');
+    const dashboard = document.getElementById('dashboard');
+    const loginForm = document.getElementById('loginForm');
+    const userName = document.getElementById('userName');
+    const userInitial = document.getElementById('userInitial');
+    const status = document.getElementById('status');
+
+    const imageUpload = document.getElementById('imageUpload');
+    const canvas = document.getElementById('canvas');
+    const previewBox = document.getElementById('previewBox');
+    const emptyState = document.getElementById('emptyState');
+    const promtText = document.getElementById('promtText');
+    const applyAiBtn = document.getElementById('applyAiBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const effectPreset = document.getElementById('effectPreset');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    let originalImage = null;
+    let imageLoaded = false;
+    let currentFilters = {
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      sepia: 0,
+      blur: 0
+    };
+
+    function setStatus(text, isSuccess = true) {
+      status.textContent = text;
+      status.style.color = isSuccess ? '#9ef0c1' : '#f7a6a6';
+    }
+
+    function getSavedUser() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY));
+      } catch {
+        return null;
+      }
+    }
+
+    function saveUser(user) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+    }
+
+    function removeUser() {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+
+    function showDashboard(user) {
+      const email = user?.email || 'المستخدم';
+      const initial = email.charAt(0).toUpperCase();
+      userName.textContent = email.split('@')[0] || 'المستخدم';
+      userInitial.textContent = initial;
+      loginScreen.style.display = 'none';
+      dashboard.classList.add('show');
+    }
+
+    function showLogin() {
+      dashboard.classList.remove('show');
+      loginScreen.style.display = 'grid';
+    }
+
+    function renderFilters() {
+      const brightness = document.getElementById('brightness');
+      const contrast = document.getElementById('contrast');
+      const saturation = document.getElementById('saturation');
+      const sepia = document.getElementById('sepia');
+      const blur = document.getElementById('blur');
+
+      document.getElementById('brightnessVal').textContent = brightness.value + '%';
+      document.getElementById('contrastVal').textContent = contrast.value + '%';
+      document.getElementById('saturationVal').textContent = saturation.value + '%';
+      document.getElementById('sepiaVal').textContent = sepia.value + '%';
+      document.getElementById('blurVal').textContent = blur.value + 'px';
+
+      currentFilters = {
+        brightness: Number(brightness.value),
+        contrast: Number(contrast.value),
+        saturation: Number(saturation.value),
+        sepia: Number(sepia.value),
+        blur: Number(blur.value)
+      };
+
+      if (!imageLoaded || !originalImage) return;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.filter = `brightness(${currentFilters.brightness}%) contrast(${currentFilters.contrast}%) saturate(${currentFilters.saturation}%) sepia(${currentFilters.sepia}%) blur(${currentFilters.blur}px)`;
+      ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+      ctx.filter = 'none';
+    }
+
+    function applyPreset() {
+      const preset = effectPreset.value;
+      const controls = {
+        brightness: document.getElementById('brightness'),
+        contrast: document.getElementById('contrast'),
+        saturation: document.getElementById('saturation'),
+        sepia: document.getElementById('sepia'),
+        blur: document.getElementById('blur')
+      };
+
+      if (preset === 'cinematic') {
+        controls.brightness.value = 115;
+        controls.contrast.value = 130;
+        controls.saturation.value = 110;
+        controls.sepia.value = 12;
+        controls.blur.value = 0;
+      }
+
+      if (preset === 'vivid') {
+        controls.brightness.value = 110;
+        controls.contrast.value = 120;
+        controls.saturation.value = 150;
+        controls.sepia.value = 0;
+        controls.blur.value = 0;
+      }
+
+      if (preset === 'soft') {
+        controls.brightness.value = 105;
+        controls.contrast.value = 90;
+        controls.saturation.value = 85;
+        controls.sepia.value = 8;
+        controls.blur.value = 1;
+      }
+
+      if (preset === 'mono') {
+        controls.brightness.value = 95;
+        controls.contrast.value = 125;
+        controls.saturation.value = 20;
+        controls.sepia.value = 0;
+        controls.blur.value = 0;
+      }
+
+      renderFilters();
+    }
+
+    function loadImageAndRender(file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+          originalImage = img;
+          imageLoaded = true;
+          emptyState.style.display = 'none';
+          canvas.style.display = 'block';
+          canvas.width = img.width;
+          canvas.height = img.height;
+          renderFilters();
+          setStatus('تم تحميل الصورة بنجاح');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    imageUpload.addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      loadImageAndRender(file);
+    });
+
+    ['brightness','contrast','saturation','sepia','blur'].forEach((id) => {
+      document.getElementById(id).addEventListener('input', renderFilters);
+    });
+
+    effectPreset.addEventListener('change', applyPreset);
+
+    applyAiBtn.addEventListener('click', function () {
+      if (!imageLoaded || !originalImage) {
+        setStatus('يرجى رفع صورة أولاً', false);
+        return;
+      }
+
+      const prompt = promtText.value.trim();
+      if (!prompt) {
+        setStatus('اكتب وصف التأثير أولاً', false);
+        return;
+      }
+
+      const tokens = prompt.toLowerCase();
+      const isCinematic = tokens.includes('سينمائي') || tokens.includes('cinematic');
+      const isVivid = tokens.includes('زاه') || tokens.includes('vivid') || tokens.includes('ساطع');
+      const isSoft = tokens.includes('ناع') || tokens.includes('soft');
+      const isMono = tokens.includes('أبيض') || tokens.includes('black') || tokens.includes('mono');
+
+      if (isCinematic) {
+        effectPreset.value = 'cinematic';
+      } else if (isVivid) {
+        effectPreset.value = 'vivid';
+      } else if (isSoft) {
+        effectPreset.value = 'soft';
+      } else if (isMono) {
+        effectPreset.value = 'mono';
+      } else {
+        effectPreset.value = 'custom';
+      }
+
+      applyPreset();
+      setStatus('تم تطبيق التأثير الذكي بنجاح');
+    });
+
+    resetBtn.addEventListener('click', function () {
+      document.getElementById('brightness').value = 100;
+      document.getElementById('contrast').value = 100;
+      document.getElementById('saturation').value = 100;
+      document.getElementById('sepia').value = 0;
+      document.getElementById('blur').value = 0;
+      effectPreset.value = 'custom';
+      renderFilters();
+      setStatus('تمت إعادة الضبط إلى الحالة الأساسية');
+    });
+
+    downloadBtn.addEventListener('click', function () {
+      if (!imageLoaded) {
+        setStatus('لا توجد صورة لحفظها', false);
+        return;
+      }
+
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = 'ai-edited-image.png';
+      link.click();
+      setStatus('تم حفظ الصورة بنجاح');
+    });
+
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const rememberMe = document.getElementById('rememberMe').checked;
+
+      if (!email || !password) {
+        setStatus('يرجى إدخال البريد الإلكتروني وكلمة المرور', false);
+        return;
+      }
+
+      const user = { email, password, rememberMe };
+      if (rememberMe) saveUser(user);
+      else removeUser();
+
+      showDashboard(user);
+      setStatus('تم تسجيل الدخول بنجاح');
+    });
+
+    logoutBtn.addEventListener('click', function () {
+      removeUser();
+      showLogin();
+      document.getElementById('loginForm').reset();
+      setStatus('تم تسجيل الخروج');
+    });
+
+    const savedUser = getSavedUser();
+    if (savedUser && savedUser.email && savedUser.password) {
+      showDashboard(savedUser);
+    }
+  </script>
 </body>
 </html>
